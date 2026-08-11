@@ -11,18 +11,26 @@ the package's own README and the monorepo's operator-acceptance doc, not paraphr
 
 ---
 
-## Outreach sequence (72h)
+## Outreach sourcing (72h, zero-base)
 
-| Priority | Target |
-|---|---|
-| 1 | **Vicky** |
-| 2 | **Nick** |
-| 3 | **Lucas** |
+No named target list — the previous one was stale. Source candidates from evidence of
+real engagement, not cold search:
 
-No artificial 24h stagger between names — reach all three, the slate is evaluated at
-the 72h mark as a whole. Success = **one named external host, one matched pair**
-(section 5) — a `BLOCK` run and an `ALLOW` run from the *same* environment and stable
-`integration` label, not a star count, a download number, or a single arm alone.
+- **Warm technical contacts** — anyone we've already found a genuine bug for or
+  filed a real issue with (self-selecting: they're already reading our code).
+- **Public reactions to filed issues/PRs** — anyone who comments, reacts, or engages
+  on an issue/PR we've opened in the x402 ecosystem.
+- **Complementary package maintainers** — projects `twzrd-x402-gate` already
+  integrates with by design (its README documents specific client-library hooks),
+  where installing the gate is a natural few-line addition, not a new integration.
+- **Public GitHub engagement with our own repos** — stargazers/forkers of the
+  starter repos are self-selected, discoverable via the public GitHub API, not a
+  private-person search.
+
+Reach candidates in parallel, no artificial stagger. Success = **one real external
+host, one matched pair** (section 5) — a `BLOCK` run and an `ALLOW` run from the same
+environment and stable `integration` label, not a star count, a download number, or a
+single arm alone.
 
 ---
 
