@@ -11,6 +11,20 @@ the package's own README and the monorepo's operator-acceptance doc, not paraphr
 
 ---
 
+## Outreach sequence (72h SLA)
+
+| Window | Target | Role |
+|---|---|---|
+| 0–24h | **Vicky** | P0 — live install on her buyer host |
+| 24–48h | **Nick** | P1 if Vicky is blocked or delayed |
+| 48–72h | **Lucas** | P2, closes the window |
+
+Success = **one named external host + one artifact** (section 5), not a star count or
+a download number. Move to the next name in sequence rather than wait indefinitely on
+one — the point is to get an artifact inside 72h, not to be polite about ordering.
+
+---
+
 ## 0. What this actually does
 
 `twzrd-x402-gate` hooks into an x402 client's `onBeforePaymentCreation` — after the
@@ -147,7 +161,57 @@ or nothing is stamped.
 
 ---
 
-## 4. Report back
+## 4. Evidence checklist (screen-share ready)
+
+Before calling a run a proof, confirm every line:
+
+```text
+[ ] Host is NOT owned/operated by TWZRD
+[ ] Operator / org is named
+[ ] Gate is wired into the pay path (installTwzrdAutoGate / createTwzrdBeforePaymentHook
+    on a real client) — a curl to /v1/intel/preflight alone does not satisfy this
+[ ] Gate evaluation timestamp is BEFORE any signTransaction / signer invocation
+[ ] On block: signer_invocation_count = 0, payment_retry_count = 0, usdc_spent = 0
+[ ] Raw gate/preflight JSON response saved
+[ ] Payer pubkey recorded
+[ ] Target URL / seller payTo recorded
+[ ] attribution.integration + attribution.runId were set (section 3) and the operator
+    posts the same runId themselves
+```
+
+## 5. Artifact template
+
+Fill this in and post it yourself (issue, PR comment, DM) — we do not accept a
+transcript we generated on your behalf as evidence (see section 3, bar #2).
+
+```markdown
+### TWZRD Path B external proof
+
+* Operator / org: …
+* Host runtime: … (not TWZRD-operated)
+* Integration: twzrd-x402-gate@0.8.14 + [x402-solana | @x402/core]
+* Target endpoint / payTo: …
+* Payer pubkey: …
+* Timestamp (UTC): …
+* attribution.integration / attribution.runId: …
+
+#### Gate decision (raw response)
+\`\`\`json
+{ "decision": "block", "trust_score": 30.0, "can_spend": false, "...": "..." }
+\`\`\`
+
+#### Outcome
+* Signer invoked: NO (block) / YES (allow — include tx signature)
+* signer_invocation_count: 0
+* Mainnet tx: N/A (block) / <signature> (allow)
+```
+
+Real `decision` values from the live API are lowercase: `allow`, `warn`, `block` — not
+`ALLOW`/`BLOCK`. Copy the response verbatim rather than retyping it.
+
+---
+
+## 6. Report back
 
 Paste the transcript JSON (or the accurate one-liner below, filled in with your own
 `preflight_id`/`runId`) wherever you're talking to us — a GitHub issue, a DM, a PR
@@ -159,6 +223,19 @@ comment. That's the whole loop:
 
 If you'd rather not install anything yet: `npx twzrd-preflight <wallet-or-url>` is the
 free, no-auth CLI check — same trust data, no gate wiring, good for a first look.
+
+---
+
+## After the first real artifact
+
+Public framing waits for a real artifact, not the other way around:
+
+> Recorded an external refuse-before-sign: independent buyer host, TWZRD gate on the
+> pay path, block with zero keypair signatures. Internal supply was step one — this is
+> step two. `npm i twzrd-x402-gate@0.8.14` — hook before sign, not after.
+
+Don't post this (or anything like it) before section 5's artifact is real and
+operator-posted. An ops-funded settle or a self-run local proof is not this claim.
 
 ---
 
