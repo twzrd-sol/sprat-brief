@@ -1,13 +1,52 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
+  "updated_at": "2026-08-11T21:45:00.000Z",
   "lanes": [
-    {"id": "workers-hono", "name": "Workers Solana sell", "status": "live", "detail": "x402-hono + TWZRD facilitator on mainnet USDC.", "product": "Immediate revenue path"},
-    {"id": "preflight", "name": "Preflight intel gate", "status": "live", "detail": "Seller wallet reputation + price sanity.", "product": "intel.twzrd.xyz"},
-    {"id": "portable-proof", "name": "Portable proof upsell (P5)", "status": "live", "detail": "Funnel measuring from clean zero.", "product": "Monetization layer"},
-    {"id": "mcp-svm", "name": "Agents MCP @x402/svm", "status": "watch", "detail": "Cloudflare Agents MCP still EVM-only.", "product": "Signal B — passive watch"},
-    {"id": "cf-wallets", "name": "Cloudflare Wallets API", "status": "watch", "detail": "Handle reservation live; Virtual Wallet API still coming.", "product": "Signal A — passive watch"},
-    {"id": "token-policy", "name": "CF token mint policy", "status": "ready", "detail": "Per-job token policy ready. No speculative scopes.", "product": "Ops readiness"}
+    {
+      "id": "workers-hono",
+      "name": "Workers Solana sell",
+      "status": "live",
+      "detail": "x402-hono + TWZRD facilitator on mainnet USDC. Only Solana-capable CF surface today.",
+      "product": "Immediate revenue path"
+    },
+    {
+      "id": "preflight",
+      "name": "Preflight intel gate",
+      "status": "live",
+      "detail": "Seller wallet reputation + price sanity.",
+      "product": "intel.twzrd.xyz"
+    },
+    {
+      "id": "portable-proof",
+      "name": "Portable proof upsell (P5)",
+      "status": "live",
+      "detail": "Funnel measuring from clean zero.",
+      "product": "Monetization layer"
+    },
+    {
+      "id": "mcp-svm",
+      "name": "Agents MCP @x402/svm",
+      "status": "watch",
+      "detail": "EVM-only in agents MCP. Foundation @x402/svm exists. #1989 may deprecate mcp/x402.ts. No build this week.",
+      "product": "Signal B — passive watch"
+    },
+    {
+      "id": "cf-wallets",
+      "name": "Cloudflare Wallets API",
+      "status": "watch",
+      "detail": "Handle reservation live; Virtual Wallet API still coming.",
+      "product": "Signal A — passive watch"
+    },
+    {
+      "id": "token-policy",
+      "name": "CF token mint policy",
+      "status": "ready",
+      "detail": "Per-job token policy ready. No speculative scopes.",
+      "product": "Ops readiness"
+    }
   ],
   "ship_now": ["workers-hono", "preflight", "portable-proof"],
-  "watch": ["mcp-svm", "cf-wallets"]
+  "watch": ["mcp-svm", "cf-wallets"],
+  "hold_engineering": ["mcp-svm"],
+  "decision": "2026-08-11 brief+hold — flood hono Solana; MCP-SVM watch only"
 }

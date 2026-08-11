@@ -8,9 +8,16 @@
 
 - **Name:** SPRAT (sprat)
 - **Org:** TWZRD
-- **Schema version:** 1.0.0
+- **Schema version:** 1.1.0
 - **Thesis:** Own the rails that put every Cloudflare Agent on Solana.
 - **Mission:** Convert Cloudflare agent demand into Solana settlement volume with TWZRD as the default trust + facilitator supplier.
+
+## Decision lock (2026-08-11)
+
+**Ship now = Workers + x402-hono + intel facilitator.**  
+**MCP Solana = watch only.** Do not engineer Agents SVM this week. Optional later: read-only go/no-go spike; if go, companion package first, then optional upstream PR (mind cloudflare/agents#1989 deprecation of current x402 integration).
+
+Foundation `@x402/svm` already exists (e.g. 2.21.0). Gap is CF MCP registration, not missing scheme code. Probe for `ExactSvmScheme` / `@x402/svm` on both server and client — not “does TWZRD feePayer Solana” (already true).
 
 ## Provenance (critical for other agents)
 
@@ -28,38 +35,44 @@
 
 ## Ship now (status: live)
 
-- **workers-hono** — Workers Solana sell: x402-hono + TWZRD facilitator on mainnet USDC.
+- **workers-hono** — Workers Solana sell: x402-hono + TWZRD facilitator on mainnet USDC. Only Solana-capable CF surface today.
 - **preflight** — Preflight intel gate: Seller wallet reputation + price sanity.
 - **portable-proof** — Portable proof upsell (P5): Funnel measuring from clean zero.
 
 ## Passive watch (do not build speculative supply)
 
-- **mcp-svm** — Agents MCP @x402/svm: Cloudflare Agents MCP still EVM-only.
+- **mcp-svm** — Agents MCP: still `@x402/evm` only. Watch Signal B. Related: CF agents #1863 (open multi-scheme bug), #1989 (x402 deprecation → Monetization Gateway), #596 (Solana enhancement closed NOT_PLANNED).
 - **cf-wallets** — Cloudflare Wallets API: Handle reservation live; stable Virtual Wallet API still coming.
 
 ## Signals that re-engage CF deep integration
 
 - **Signal A (CF Wallets API):** Stable documentable Virtual Wallet API with create/list/fund ops.
-- **Signal B (MCP @x402/svm):** cloudflare/agents packages/agents/src/mcp/x402.ts registers @x402/svm or Solana scheme.
+- **Signal B (MCP @x402/svm):** cloudflare/agents MCP x402 registers SVM on **both** server and client; Solana in network map; changelog mentions Solana/SVM x402.
 - Probe B: https://raw.githubusercontent.com/cloudflare/agents/main/packages/agents/src/mcp/x402.ts
+- Probe hint: grep `ExactSvmScheme` or `@x402/svm` (not only a factory function name).
 
-## Settlement path (order)
+## Settlement path (order) — live HTTP path
 
-1. [cf] CF Agent / Worker
+1. [cf] CF Worker (x402-hono)
 2. [cf] HTTP 402 challenge (network: solana)
-3. [twzrd] TWZRD preflight
+3. [twzrd] TWZRD preflight (optional buyer gate)
 4. [solana] Solana sign (SPL USDC)
 5. [twzrd] Facilitator settle
 6. [cf] Resource delivered
 
 ## Integration (live path)
 
+- Surface: **x402-hono** (not agents withX402/paidTool — EVM-only today)
 - Network: solana
 - Facilitator: https://intel.twzrd.xyz
+- Example docs: monorepo `examples/cloudflare-x402-seller/`
+- Live demo Worker: https://x402-seller-hack-20260810.fp4b5ksccw.workers.dev/paid/hello (ops-funded payer caveat)
 
 ## Operator posture
 
-Do not pre-build speculative CF Wallets scopes. Flood Solana volume through live Workers path while Signals A/B stay red.
+Flood Solana volume through live Workers path while Signals A/B stay red.  
+Do not pre-build speculative CF Wallets scopes.  
+Do not engineer Agents MCP SVM without an explicit written go after a read-only spike.
 
 ## Related
 

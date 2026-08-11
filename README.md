@@ -25,3 +25,6 @@ curl -sS https://raw.githubusercontent.com/twzrd-sol/sprat-brief/main/sprat.json
 
 ## Ship now / watch
 See `sprat.json` → `posture.ship_now` and `posture.hold`.
+
+## Multi-agent decision (2026-08-11)
+**brief + hold.** Flood `x402-hono` Solana. MCP-SVM = watch only (optional read-only spike later, not build-now). See `sprat.json` → `decision_2026_08_11`.

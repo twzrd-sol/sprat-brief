@@ -1,10 +1,10 @@
 {
   "schema": "https://twzrd.xyz/schema/sprat-manifest/v1",
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "product_id": "sprat",
   "product_name": "SPRAT",
   "org": "TWZRD",
-  "generated_at": "2026-08-11T21:30:00.000Z",
+  "generated_at": "2026-08-11T21:45:00.000Z",
   "provenance": {
     "connected_to_wzrd_final": false,
     "source": "operator_brief_static",
@@ -15,25 +15,107 @@
     "headline": "Own the rails that put every Cloudflare Agent on Solana.",
     "subcopy": "Cloudflare owns agent distribution. Solana owns settlement speed. SPRAT by TWZRD is the trust + x402 facilitator middle."
   },
+  "decision_2026_08_11": {
+    "summary": "Hold engineering on Agents MCP SVM. Flood live x402-hono Solana path. MCP-SVM is watch + optional read-only spike only — not build-now.",
+    "pick": "brief+hold",
+    "do_not": [
+      "Re-probe Signal B weekly as if it is the product",
+      "Build cloudflare/agents SVM fork this week without a go/no-go spike",
+      "Claim generational moat or facilitator monopoly",
+      "Treat paid MCP Solana as unblocked",
+      "Reopen #596 as pure Solana enhancement without multi-scheme framing"
+    ],
+    "ship_now": [
+      "Workers + x402-hono + network:solana + https://intel.twzrd.xyz",
+      "Public monorepo docs: examples/cloudflare-x402-seller README + CF_AGENTS_SOLANA.md (#1924/#1925/#1928)"
+    ],
+    "if_spike_later": {
+      "type": "read_only",
+      "return": [
+        "Patch outline (ExactSvmScheme twin + type unions)",
+        "Issue strategy: attach #1863 not reopen #596; check #1989 deprecation risk",
+        "Gas cost model if MCP Solana hits TWZRD sponsor",
+        "Explicit go / no-go / wait-for-Monetization-Gateway"
+      ],
+      "preferred_ship_shape_if_go": "Companion package first (usable without CF merge) + optional upstream PR sketch"
+    },
+    "github_agents_context": {
+      "596": "closed NOT_PLANNED — pure Solana MCP enhancement rejected once",
+      "1863": "open bug — docs claim multi-chain; code EVM-only; multi-scheme + type widen design (Stellar-focused but same hole)",
+      "1989": "open — deprecating current x402 integration toward Monetization Gateway (raises merge risk for patches to mcp/x402.ts)",
+      "793": "closed completed — v2 migrate; body mentioned future Solana; stopped at EVM"
+    },
+    "signal_b_probe_correction": {
+      "scheme_package": "@x402/svm@2.21.0 (complete, not stub)",
+      "register_api": "ExactSvmScheme class + registerExactSvmScheme on exact/server and exact/client (mirror EVM paths)",
+      "grep_hint": "Prefer ExactSvmScheme or @x402/svm — not only registerExactSvmScheme function name",
+      "fires_when": [
+        "SVM scheme registered on BOTH server and client in agents MCP x402 module",
+        "Solana appears in MCP network map / types",
+        "agents changelog mentions Solana/SVM x402"
+      ],
+      "not_enough": [
+        "TWZRD facilitator feePayers mainnet Solana (already true)",
+        "More x402-hono docs",
+        "Wallet API without MCP SVM"
+      ]
+    }
+  },
   "agent": {
     "name": "SPRAT Agent",
     "codename": "sprat",
     "role": "Solana Payment Rails for Agent Traffic",
     "mission": "Convert Cloudflare agent demand into Solana settlement volume with TWZRD as the default trust + facilitator supplier.",
     "weapons": [
-      "x402-hono Workers path (live)",
+      "x402-hono Workers path (live, public workers.dev proof)",
       "Preflight reputation gate (live)",
       "Portable proof upsell funnel (live)",
-      "Passive watch on MCP SVM + CF Wallets API"
+      "Passive watch on MCP SVM + CF Wallets API — no speculative build"
     ]
   },
   "supply_lanes": [
-    {"id": "workers-hono", "name": "Workers Solana sell", "status": "live", "detail": "x402-hono + TWZRD facilitator on mainnet USDC.", "product": "Immediate revenue path"},
-    {"id": "preflight", "name": "Preflight intel gate", "status": "live", "detail": "Seller wallet reputation + price sanity.", "product": "intel.twzrd.xyz"},
-    {"id": "portable-proof", "name": "Portable proof upsell (P5)", "status": "live", "detail": "Funnel measuring from clean zero.", "product": "Monetization layer"},
-    {"id": "mcp-svm", "name": "Agents MCP @x402/svm", "status": "watch", "detail": "Cloudflare Agents MCP still EVM-only.", "product": "Signal B — passive watch"},
-    {"id": "cf-wallets", "name": "Cloudflare Wallets API", "status": "watch", "detail": "Handle reservation live; Virtual Wallet API still coming.", "product": "Signal A — passive watch"},
-    {"id": "token-policy", "name": "CF token mint policy", "status": "ready", "detail": "Per-job token policy ready. No speculative scopes.", "product": "Ops readiness"}
+    {
+      "id": "workers-hono",
+      "name": "Workers Solana sell",
+      "status": "live",
+      "detail": "x402-hono + TWZRD facilitator on mainnet USDC. Only Solana-capable CF surface today.",
+      "product": "Immediate revenue path"
+    },
+    {
+      "id": "preflight",
+      "name": "Preflight intel gate",
+      "status": "live",
+      "detail": "Seller wallet reputation + price sanity.",
+      "product": "intel.twzrd.xyz"
+    },
+    {
+      "id": "portable-proof",
+      "name": "Portable proof upsell (P5)",
+      "status": "live",
+      "detail": "Funnel measuring from clean zero.",
+      "product": "Monetization layer"
+    },
+    {
+      "id": "mcp-svm",
+      "name": "Agents MCP @x402/svm",
+      "status": "watch",
+      "detail": "Agents MCP still EVM-only. Foundation @x402/svm exists; CF has not registered it. #1989 may replace mcp/x402.ts. No engineering this week.",
+      "product": "Signal B — passive watch only"
+    },
+    {
+      "id": "cf-wallets",
+      "name": "Cloudflare Wallets API",
+      "status": "watch",
+      "detail": "Handle reservation live; Virtual Wallet API still coming.",
+      "product": "Signal A — passive watch"
+    },
+    {
+      "id": "token-policy",
+      "name": "CF token mint policy",
+      "status": "ready",
+      "detail": "Per-job token policy ready. CF_WORKERS_DEPLOY_TOKEN separate from CF_API_TOKEN analytics.",
+      "product": "Ops readiness"
+    }
   ],
   "flow_steps": [
     {"id": "agent", "label": "CF Agent / Worker", "detail": "Agent requests a paid resource.", "side": "cf"},
@@ -46,23 +128,40 @@
   "metrics": [
     {"label": "Facilitator path", "value": "Solana mainnet", "hint": "USDC exact"},
     {"label": "CF handle", "value": "twzrd.cloudflare.pay", "hint": "reserved"},
-    {"label": "P5 impressions", "value": "0", "hint": "clean baseline"},
-    {"label": "MCP SVM", "value": "not registered", "hint": "watch Signal B"}
+    {"label": "Live proof", "value": "x402-seller-hack-20260810.fp4b5ksccw.workers.dev", "hint": "ops-funded payer caveat"},
+    {"label": "MCP SVM", "value": "not registered", "hint": "watch Signal B; #1989 deprecation risk"}
   ],
   "integration": {
     "network": "solana",
     "facilitator_url": "https://intel.twzrd.xyz",
-    "snippet_language": "typescript"
+    "snippet_language": "typescript",
+    "surface": "x402-hono",
+    "not_surface": "agents/x402 withX402 paidTool (EVM-only today)"
   },
   "signals": {
-    "A": {"id": "cf-wallets-api", "status": "watch", "fires_when": "Stable documentable Virtual Wallet API with create/list/fund ops."},
-    "B": {"id": "mcp-x402-svm", "status": "watch", "fires_when": "Agents MCP registers @x402/svm or Solana scheme.", "probe": "https://raw.githubusercontent.com/cloudflare/agents/main/packages/agents/src/mcp/x402.ts"}
+    "A": {
+      "id": "cf-wallets-api",
+      "status": "watch",
+      "fires_when": "Stable documentable Virtual Wallet API with create/list/fund ops."
+    },
+    "B": {
+      "id": "mcp-x402-svm",
+      "status": "watch",
+      "fires_when": "Agents MCP registers SVM scheme on both server and client; Solana in network map; changelog mentions Solana/SVM x402.",
+      "probe": "https://raw.githubusercontent.com/cloudflare/agents/main/packages/agents/src/mcp/x402.ts",
+      "probe_hint": "grep ExactSvmScheme or @x402/svm (scheme package is class-based, Foundation-complete at 2.21.0)",
+      "related_issues": [
+        "https://github.com/cloudflare/agents/issues/1863",
+        "https://github.com/cloudflare/agents/issues/1989",
+        "https://github.com/cloudflare/agents/issues/596"
+      ]
+    }
   },
   "posture": {
     "ship_now": ["workers-hono", "preflight", "portable-proof"],
     "hold": ["mcp-svm", "cf-wallets"],
     "ready_not_shipped": ["token-policy"],
-    "guardrail": "Do not pre-build speculative CF Wallets scopes. Flood Solana volume through live Workers path while Signals A/B stay red."
+    "guardrail": "Flood Solana volume through live Workers + x402-hono + intel facilitator. Do not pre-build speculative CF Wallets scopes. Do not engineer Agents MCP SVM this week without an explicit spike go. Signal B is not product until CF registers SVM (or you ship a companion package after a written go/no-go)."
   },
   "machine_endpoints": {
     "self": "https://raw.githubusercontent.com/twzrd-sol/sprat-brief/main/sprat.json",
@@ -74,6 +173,8 @@
   "external": {
     "intel_llms": "https://intel.twzrd.xyz/llms.txt",
     "facilitator": "https://intel.twzrd.xyz",
-    "cloudflare_agents_x402": "https://raw.githubusercontent.com/cloudflare/agents/main/packages/agents/src/mcp/x402.ts"
+    "cloudflare_agents_x402": "https://raw.githubusercontent.com/cloudflare/agents/main/packages/agents/src/mcp/x402.ts",
+    "example_readme": "https://github.com/twzrd-sol/wzrd-final/tree/main/examples/cloudflare-x402-seller",
+    "live_worker": "https://x402-seller-hack-20260810.fp4b5ksccw.workers.dev/paid/hello"
   }
 }
