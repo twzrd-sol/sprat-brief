@@ -1,7 +1,7 @@
 # Path B external integration runbook
 
-**Goal:** install the buyer-side x402 trust gate, run a no-spend proof, and produce a
-transcript that counts as an external adoption signal — not TWZRD dogfood.
+**Goal:** install the buyer-side x402 trust gate and produce a **matched BLOCK+ALLOW
+pair** — an external adoption signal, not TWZRD dogfood and not one arm alone.
 
 **Package:** [`twzrd-x402-gate`](https://www.npmjs.com/package/twzrd-x402-gate) (npm,
 MIT, zero deps). Current: `0.8.14`.
@@ -11,17 +11,18 @@ the package's own README and the monorepo's operator-acceptance doc, not paraphr
 
 ---
 
-## Outreach sequence (72h SLA)
+## Outreach sequence (72h)
 
-| Window | Target | Role |
-|---|---|---|
-| 0–24h | **Vicky** | P0 — live install on her buyer host |
-| 24–48h | **Nick** | P1 if Vicky is blocked or delayed |
-| 48–72h | **Lucas** | P2, closes the window |
+| Priority | Target |
+|---|---|
+| 1 | **Vicky** |
+| 2 | **Nick** |
+| 3 | **Lucas** |
 
-Success = **one named external host + one artifact** (section 5), not a star count or
-a download number. Move to the next name in sequence rather than wait indefinitely on
-one — the point is to get an artifact inside 72h, not to be polite about ordering.
+No artificial 24h stagger between names — reach all three, the slate is evaluated at
+the 72h mark as a whole. Success = **one named external host, one matched pair**
+(section 5) — a `BLOCK` run and an `ALLOW` run from the *same* environment and stable
+`integration` label, not a star count, a download number, or a single arm alone.
 
 ---
 
@@ -63,18 +64,62 @@ installTwzrdAutoGate(client, { refuseWashFlagged: true });
 // then register schemes + wrapFetchWithPayment as usual
 ```
 
-### PayAI `x402-solana`
+### PayAI `x402-solana` — instrumented (this is what produces a real artifact)
+
+Minimal wiring proves the mechanism; this version also proves it — by instrumenting
+your own signing boundary so `signerInvocations` is measured, not assumed, and by
+capturing everything section 5's artifact template needs in one run.
 
 ```typescript
 import { createX402Client } from "x402-solana";
 import { createTwzrdBeforePaymentHook } from "twzrd-x402-gate";
 
-const client = createX402Client({
-  wallet,
-  network: "solana",
-  beforePayment: createTwzrdBeforePaymentHook({ refuseWashFlagged: true }),
+const integration = "your-project-name";  // stable label, yours
+const runId = crypto.randomUUID();        // fresh per arm — run this twice, once
+                                           // against a seller you expect to block,
+                                           // once against one you expect to allow
+const decisions: unknown[] = [];
+let signerInvocations = 0;
+
+// Wrap your OWN wallet's signer so a block is proven, not assumed.
+const instrumentedWallet = new Proxy(wallet, {
+  get(target, prop, receiver) {
+    const value = Reflect.get(target, prop, receiver);
+    if (prop === "signTransaction" && typeof value === "function") {
+      return async (...args: unknown[]) => {
+        signerInvocations += 1;
+        return value.apply(target, args);
+      };
+    }
+    return typeof value === "function" ? value.bind(target) : value;
+  },
 });
+
+const client = createX402Client({
+  wallet: instrumentedWallet,
+  network: "solana",
+  beforePayment: createTwzrdBeforePaymentHook({
+    refuseWashFlagged: true,
+    gateOnCanSpend: false,   // opt-in only — see package config table
+    failOpen: false,
+    attribution: { integration, runId },
+    onDecision: (detail) => decisions.push({ ...detail, evaluatedAt: new Date().toISOString() }),
+  }),
+});
+
+try {
+  const response = await client.fetch(targetUrl);
+  console.log({ outcome: "completed", httpStatus: response.status, integration, runId, signerInvocations, decisions });
+} catch (error) {
+  console.log({ outcome: "refused", error: String(error), integration, runId, signerInvocations, decisions });
+}
 ```
+
+A block surfaces as a **thrown error** from `client.fetch` (confirmed against the
+package's own `twzrd-gate-eval-refuse` bin output: `"observed_error": "Failed to
+create payment payload: Payment creation aborted: ..."`), not a resolved response you
+have to inspect — the `try`/`catch` split above is the real control flow, not a
+simplification.
 
 **Compatibility note:** proxied clients (AgentCash `.fetch`, ClawRouter `:8402`) handle
 402 internally and return 200 — the guard must wrap the client's *input*, never its
@@ -150,6 +195,11 @@ or nothing is stamped.
    from non-internal lineage.
 4. Prefer evidence that you installed via npm and ran the actual hook path, not just
    this repo's own unit tests.
+5. **A matched pair, not one arm.** Closing external Path B for the sprint means a
+   `BLOCK` run (`signerInvocations: 0`) *and* an `ALLOW` run (`signerInvocations >= 1`,
+   real mainnet settlement tx) from the same operator environment and stable
+   `integration`, with a fresh `runId` per arm. One arm alone is partial evidence —
+   real, worth logging, but not a closed milestone.
 
 ### What does **not** count
 
@@ -163,51 +213,57 @@ or nothing is stamped.
 
 ## 4. Evidence checklist (screen-share ready)
 
-Before calling a run a proof, confirm every line:
+Before calling a pair complete, confirm every line for **both** arms:
 
 ```text
 [ ] Host is NOT owned/operated by TWZRD
 [ ] Operator / org is named
-[ ] Gate is wired into the pay path (installTwzrdAutoGate / createTwzrdBeforePaymentHook
-    on a real client) — a curl to /v1/intel/preflight alone does not satisfy this
+[ ] Gate is wired into the pay path (createTwzrdBeforePaymentHook /
+    installTwzrdAutoGate on a real client) — a curl to /v1/intel/preflight alone
+    does not satisfy this
 [ ] Gate evaluation timestamp is BEFORE any signTransaction / signer invocation
-[ ] On block: signer_invocation_count = 0, payment_retry_count = 0, usdc_spent = 0
-[ ] Raw gate/preflight JSON response saved
-[ ] Payer pubkey recorded
-[ ] Target URL / seller payTo recorded
-[ ] attribution.integration + attribution.runId were set (section 3) and the operator
-    posts the same runId themselves
+[ ] BLOCK arm: signerInvocations = 0, zero gas, zero tx, refusal reason captured
+[ ] ALLOW arm: signerInvocations >= 1, HTTP 200, real mainnet settlement signature
+[ ] Same operator environment + same integration label across both arms
+[ ] Fresh, distinct runId per arm
+[ ] Raw gate decision (onDecision detail or preflight JSON) saved for both arms
+[ ] Payer pubkey + target URL / seller payTo recorded for both arms
+[ ] Both runIds posted by the operator themselves, not generated on their behalf
 ```
 
-## 5. Artifact template
+## 5. Artifact template (matched pair)
 
 Fill this in and post it yourself (issue, PR comment, DM) — we do not accept a
-transcript we generated on your behalf as evidence (see section 3, bar #2).
+transcript we generated on your behalf as evidence (see section 3, bar #2). One arm
+alone is worth logging as partial progress but does not close the milestone.
 
 ```markdown
-### TWZRD Path B external proof
+### TWZRD Path B external proof — matched pair
 
 * Operator / org: …
 * Host runtime: … (not TWZRD-operated)
 * Integration: twzrd-x402-gate@0.8.14 + [x402-solana | @x402/core]
-* Target endpoint / payTo: …
-* Payer pubkey: …
-* Timestamp (UTC): …
-* attribution.integration / attribution.runId: …
+* Date: …
 
-#### Gate decision (raw response)
-\`\`\`json
-{ "decision": "block", "trust_score": 30.0, "can_spend": false, "...": "..." }
-\`\`\`
+#### Arm 1 — BLOCK
+* runId: …
+* outcome: "refused" (client.fetch threw)
+* decision: "block", approved: false
+* signerInvocations: 0
+* Target endpoint / payTo / payer pubkey: …
+* Raw decision payload: \`{ "decision": "block", "trust_score": …, "can_spend": false }\`
 
-#### Outcome
-* Signer invoked: NO (block) / YES (allow — include tx signature)
-* signer_invocation_count: 0
-* Mainnet tx: N/A (block) / <signature> (allow)
+#### Arm 2 — ALLOW
+* runId: …
+* outcome: "completed", httpStatus: 200
+* decision: "allow", approved: true
+* signerInvocations: 1 (or more)
+* Mainnet settlement tx signature: …
+* Target endpoint / payTo / payer pubkey: …
 ```
 
 Real `decision` values from the live API are lowercase: `allow`, `warn`, `block` — not
-`ALLOW`/`BLOCK`. Copy the response verbatim rather than retyping it.
+`ALLOW`/`BLOCK`. Copy responses verbatim rather than retyping them.
 
 ---
 
@@ -226,16 +282,23 @@ free, no-auth CLI check — same trust data, no gate wiring, good for a first lo
 
 ---
 
-## After the first real artifact
+## Founder messaging
 
-Public framing waits for a real artifact, not the other way around:
+**Until the matched pair is captured, say "enrolling," not "proven":**
 
-> Recorded an external refuse-before-sign: independent buyer host, TWZRD gate on the
-> pay path, block with zero keypair signatures. Internal supply was step one — this is
-> step two. `npm i twzrd-x402-gate@0.8.14` — hook before sign, not after.
+> Internal proof is locked across our dual Cloudflare Workers starters on Solana
+> mainnet. Onboarding is underway with our first external operators to run pre-sign
+> evaluation (`refuse-before-sign`) through `twzrd-x402-gate`.
 
-Don't post this (or anything like it) before section 5's artifact is real and
-operator-posted. An ops-funded settle or a self-run local proof is not this claim.
+**Only after a real, operator-posted matched pair (section 5) exists:**
+
+> Recorded an external refuse-before-sign *and* an external allow-and-settle:
+> independent buyer host, TWZRD gate on the pay path, matched pair with zero keypair
+> signatures on block and a verified mainnet tx on allow. Internal supply was step
+> one — this is step two.
+
+A single arm, an ops-funded settle, or a self-run local proof does not unlock the
+second message.
 
 ---
 
