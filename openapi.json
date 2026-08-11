@@ -1,0 +1,41 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SPRAT Machine API",
+    "version": "1.0.0",
+    "description": "Machine-readable SPRAT supplier brief for Cloudflare Agents → Solana x402. Static operator data; not wzrd-final live state."
+  },
+  "servers": [
+    {"url": "https://raw.githubusercontent.com/twzrd-sol/sprat-brief/main"}
+  ],
+  "paths": {
+    "/sprat.json": {
+      "get": {
+        "operationId": "getSpratManifest",
+        "summary": "Full SPRAT JSON manifest",
+        "responses": {"200": {"description": "SPRAT manifest"}}
+      }
+    },
+    "/lanes.json": {
+      "get": {
+        "operationId": "getSupplyLanes",
+        "summary": "Supply lanes with live|watch|ready status",
+        "responses": {"200": {"description": "Lane list"}}
+      }
+    },
+    "/llms.txt": {
+      "get": {
+        "operationId": "getLlmsTxt",
+        "summary": "Agent-oriented markdown brief",
+        "responses": {"200": {"description": "text/plain markdown"}}
+      }
+    },
+    "/agent.md": {
+      "get": {
+        "operationId": "getAgentMd",
+        "summary": "Short agent brief",
+        "responses": {"200": {"description": "markdown"}}
+      }
+    }
+  }
+}

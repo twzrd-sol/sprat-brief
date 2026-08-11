@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "lanes": [
+    {"id": "workers-hono", "name": "Workers Solana sell", "status": "live", "detail": "x402-hono + TWZRD facilitator on mainnet USDC.", "product": "Immediate revenue path"},
+    {"id": "preflight", "name": "Preflight intel gate", "status": "live", "detail": "Seller wallet reputation + price sanity.", "product": "intel.twzrd.xyz"},
+    {"id": "portable-proof", "name": "Portable proof upsell (P5)", "status": "live", "detail": "Funnel measuring from clean zero.", "product": "Monetization layer"},
+    {"id": "mcp-svm", "name": "Agents MCP @x402/svm", "status": "watch", "detail": "Cloudflare Agents MCP still EVM-only.", "product": "Signal B — passive watch"},
+    {"id": "cf-wallets", "name": "Cloudflare Wallets API", "status": "watch", "detail": "Handle reservation live; Virtual Wallet API still coming.", "product": "Signal A — passive watch"},
+    {"id": "token-policy", "name": "CF token mint policy", "status": "ready", "detail": "Per-job token policy ready. No speculative scopes.", "product": "Ops readiness"}
+  ],
+  "ship_now": ["workers-hono", "preflight", "portable-proof"],
+  "watch": ["mcp-svm", "cf-wallets"]
+}
