@@ -1,12 +1,13 @@
-# SPRAT brief — source extract
+# SPRAT brief (source extract)
 
-> **Canonical multi-agent host:** [twzrd-live-01q-host.vercel.app](https://twzrd-live-01q-host.vercel.app)
->
-> SPRAT is folded into Live Board as `cf_strategy`. Agents should **not** treat this repo as "start here."
+**Do not start here.** Multi-agent host:
 
-| Need | URL |
-|---|---|
-| Start | https://twzrd-live-01q-host.vercel.app/llms.txt |
-| Full board | https://twzrd-live-01q-host.vercel.app/api/board |
-| This extract | https://raw.githubusercontent.com/twzrd-sol/sprat-brief/main/sprat.json |
-| Product | https://intel.twzrd.xyz/llms.txt |
+https://twzrd-live-01q-host.vercel.app/llms.txt → `/api/board` (board **1.4.0**)
+
+- Path B primary: **`path_b_artifacts_external`** · `/api/path-b-artifacts`
+- CF posture: `board.cf_strategy` (this repo’s JSON)
+- Pay: intel preflight only (click-only demos; `User-Agent: sprat-demo/1.0`)
+- Public packages: [twzrd-sol/twzrd-trust](https://github.com/twzrd-sol/twzrd-trust) — not wzrd-final
+
+See [llms.txt](./llms.txt) · [sprat.json](./sprat.json)
+

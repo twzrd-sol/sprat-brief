@@ -5,7 +5,7 @@
   "product_name": "SPRAT",
   "org": "TWZRD",
   "role": "source_extract",
-  "generated_at": "2026-08-11T22:18:31.000Z",
+  "generated_at": "2026-08-12T02:42:15.000Z",
   "canonical_host": {
     "name": "TWZRD Live Board",
     "start": "https://twzrd-live-01q-host.vercel.app/llms.txt",
@@ -13,32 +13,48 @@
     "status": "https://twzrd-live-01q-host.vercel.app/api/board/status",
     "intel_health": "https://twzrd-live-01q-host.vercel.app/api/intel-health",
     "cf_strategy_path": "board.cf_strategy",
-    "note": "SPRAT content is folded into Live Board as cf_strategy (twzrd.cf_strategy/v1). Agents should start at Live Board, not this repo."
+    "note": "SPRAT is source extract only. Path B primary is external artifacts \u2014 not day0.gate_evals.",
+    "path_b_artifacts": "https://twzrd-live-01q-host.vercel.app/api/path-b-artifacts",
+    "board_version": "1.4.0",
+    "primary_path_b_metric": "path_b_artifacts_external"
   },
   "routing": {
     "start_here": "https://twzrd-live-01q-host.vercel.app/llms.txt",
     "then": "https://twzrd-live-01q-host.vercel.app/api/board",
     "cf_posture": "board.cf_strategy",
-    "path_b_execution": "board.next_actions / board.moves / board.live",
+    "path_b_execution": "board.next_actions / board.moves / board.path_b_metrics",
     "pay_decision": "https://intel.twzrd.xyz/v1/intel/preflight",
-    "never": "Use this repo or Live Board for pay decisions"
+    "never": [
+      "Use this repo or Live Board for pay decisions",
+      "Chase day0.gate_evals as Path B adoption",
+      "Count self-serve dogfood as external",
+      "Point agents at wzrd-final"
+    ],
+    "path_b_primary": "path_b_artifacts_external",
+    "path_b_registry": "https://twzrd-live-01q-host.vercel.app/api/path-b-artifacts",
+    "path_b_runbook": "https://twzrd-live-01q-host.vercel.app/api/path-b",
+    "pay_decision_policy": "click-only demos; User-Agent sprat-demo/1.0; example wallet only; no page-load spam",
+    "public_repo": "https://github.com/twzrd-sol/twzrd-trust"
   },
   "provenance": {
     "connected_to_wzrd_final": false,
     "source": "operator_brief_static",
-    "role": "source_extract_history",
+    "role": "source_extract",
     "canonical_intel": "https://intel.twzrd.xyz/llms.txt",
     "canonical_multi_agent_host": "https://twzrd-live-01q-host.vercel.app",
-    "notes": "SPRAT GitHub is source extract / history only. Canonical multi-agent host is Live Board (cf_strategy fold). Pay decisions → intel.twzrd.xyz preflight, never boards."
+    "notes": "SPRAT GitHub is source extract / history only. Canonical multi-agent host is Live Board (cf_strategy fold). Pay decisions \u2192 intel.twzrd.xyz preflight, never boards.",
+    "public_source": "https://github.com/twzrd-sol/twzrd-trust"
   },
   "thesis": {
     "headline": "Own the rails that put every Cloudflare Agent on Solana.",
     "subcopy": "Cloudflare owns agent distribution. Solana owns settlement speed. SPRAT by TWZRD is the trust + x402 facilitator middle."
   },
   "decision_2026_08_11": {
-    "summary": "Hold engineering on Agents MCP SVM. Flood live x402-hono Solana path. MCP-SVM is watch + optional read-only spike only — not build-now.",
+    "summary": "Hold engineering on Agents MCP SVM. Flood live x402-hono Solana path. MCP-SVM is watch + optional read-only spike only \u2014 not build-now.",
     "pick": "brief+hold",
-    "ship_now": ["Workers + x402-hono + network:solana + https://intel.twzrd.xyz"],
+    "ship_now": [
+      "Workers + x402-hono + network:solana + https://intel.twzrd.xyz"
+    ],
     "do_not": [
       "Re-probe Signal B weekly as if it is the product",
       "Build cloudflare/agents SVM fork this week without a go/no-go spike",
@@ -47,21 +63,70 @@
     ]
   },
   "posture": {
-    "ship_now": ["workers-hono", "preflight", "portable-proof"],
-    "hold": ["mcp-svm", "cf-wallets"],
-    "ready_not_shipped": ["token-policy"],
+    "ship_now": [
+      "workers-hono",
+      "preflight",
+      "portable-proof"
+    ],
+    "hold": [
+      "mcp-svm",
+      "cf-wallets"
+    ],
+    "ready_not_shipped": [
+      "token-policy"
+    ],
     "guardrail": "Flood Solana volume through live Workers + x402-hono + intel facilitator. Do not pre-build speculative CF Wallets scopes. Do not engineer Agents MCP SVM this week without an explicit spike go."
   },
   "supply_lanes": [
-    {"id": "workers-hono", "name": "Workers Solana sell", "status": "live", "detail": "x402-hono + TWZRD facilitator on mainnet USDC.", "product": "Immediate revenue path"},
-    {"id": "preflight", "name": "Preflight intel gate", "status": "live", "detail": "Seller wallet reputation + price sanity.", "product": "intel.twzrd.xyz"},
-    {"id": "portable-proof", "name": "Portable proof upsell (P5)", "status": "live", "detail": "Funnel measuring from clean zero.", "product": "Monetization layer"},
-    {"id": "mcp-svm", "name": "Agents MCP @x402/svm", "status": "watch", "detail": "Agents MCP still EVM-only. Foundation @x402/svm exists; CF has not registered it.", "product": "Signal B — passive watch only"},
-    {"id": "cf-wallets", "name": "Cloudflare Wallets API", "status": "watch", "detail": "Handle reservation live; Virtual Wallet API still coming.", "product": "Signal A — passive watch"},
-    {"id": "token-policy", "name": "CF token mint policy", "status": "ready", "detail": "Per-job token policy ready.", "product": "Ops readiness"}
+    {
+      "id": "workers-hono",
+      "name": "Workers Solana sell",
+      "status": "live",
+      "detail": "x402-hono + TWZRD facilitator on mainnet USDC.",
+      "product": "Immediate revenue path"
+    },
+    {
+      "id": "preflight",
+      "name": "Preflight intel gate",
+      "status": "live",
+      "detail": "Seller wallet reputation + price sanity.",
+      "product": "intel.twzrd.xyz"
+    },
+    {
+      "id": "portable-proof",
+      "name": "Portable proof upsell (P5)",
+      "status": "live",
+      "detail": "Funnel measuring from clean zero.",
+      "product": "Monetization layer"
+    },
+    {
+      "id": "mcp-svm",
+      "name": "Agents MCP @x402/svm",
+      "status": "watch",
+      "detail": "Agents MCP still EVM-only. Foundation @x402/svm exists; CF has not registered it.",
+      "product": "Signal B \u2014 passive watch only"
+    },
+    {
+      "id": "cf-wallets",
+      "name": "Cloudflare Wallets API",
+      "status": "watch",
+      "detail": "Handle reservation live; Virtual Wallet API still coming.",
+      "product": "Signal A \u2014 passive watch"
+    },
+    {
+      "id": "token-policy",
+      "name": "CF token mint policy",
+      "status": "ready",
+      "detail": "Per-job token policy ready.",
+      "product": "Ops readiness"
+    }
   ],
   "signals": {
-    "A": {"id": "cf-wallets-api", "status": "watch", "fires_when": "Stable documentable Virtual Wallet API with create/list/fund ops."},
+    "A": {
+      "id": "cf-wallets-api",
+      "status": "watch",
+      "fires_when": "Stable documentable Virtual Wallet API with create/list/fund ops."
+    },
     "B": {
       "id": "mcp-x402-svm",
       "status": "watch",
@@ -85,7 +150,18 @@
     "self": "https://raw.githubusercontent.com/twzrd-sol/sprat-brief/main/sprat.json",
     "llms_txt": "https://raw.githubusercontent.com/twzrd-sol/sprat-brief/main/llms.txt",
     "canonical_host_llms": "https://twzrd-live-01q-host.vercel.app/llms.txt",
-    "canonical_host_board": "https://twzrd-live-01q-host.vercel.app/api/board"
+    "canonical_host_board": "https://twzrd-live-01q-host.vercel.app/api/board",
+    "path_b_artifacts": "https://twzrd-live-01q-host.vercel.app/api/path-b-artifacts",
+    "intel_health": "https://intel.twzrd.xyz/health",
+    "intel_supported": "https://intel.twzrd.xyz/supported",
+    "intel_sellers": "https://intel.twzrd.xyz/v1/intel/sellers",
+    "intel_marketplace": "https://intel.twzrd.xyz/v1/intel/marketplace",
+    "intel_directory": "https://intel.twzrd.xyz/v1/intel/x402-directory",
+    "intel_resources": "https://intel.twzrd.xyz/v1/intel/resources",
+    "intel_cohort_stats": "https://intel.twzrd.xyz/v1/intel/cohort_stats",
+    "intel_score": "https://intel.twzrd.xyz/v1/intel/score_wallet_for_intel",
+    "intel_preflight": "https://intel.twzrd.xyz/v1/intel/preflight",
+    "public_trust_repo": "https://github.com/twzrd-sol/twzrd-trust"
   },
   "external": {
     "intel_llms": "https://intel.twzrd.xyz/llms.txt",
