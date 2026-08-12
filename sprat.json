@@ -1,11 +1,11 @@
 {
   "schema": "https://twzrd.xyz/schema/sprat-manifest/v1",
-  "schema_version": "1.2.0",
+  "schema_version": "1.2.1",
   "product_id": "sprat",
   "product_name": "SPRAT",
   "org": "TWZRD",
   "role": "source_extract",
-  "generated_at": "2026-08-12T02:42:15.000Z",
+  "generated_at": "2026-08-12T04:13:54.000Z",
   "canonical_host": {
     "name": "TWZRD Live Board",
     "start": "https://twzrd-live-01q-host.vercel.app/llms.txt",
@@ -26,15 +26,18 @@
     "pay_decision": "https://intel.twzrd.xyz/v1/intel/preflight",
     "never": [
       "Use this repo or Live Board for pay decisions",
-      "Chase day0.gate_evals as Path B adoption",
-      "Count self-serve dogfood as external",
+      "Chase day0.gate_evals as Path B",
+      "Treat directory fill or outreach posts as closed loops",
       "Point agents at wzrd-final"
     ],
     "path_b_primary": "path_b_artifacts_external",
     "path_b_registry": "https://twzrd-live-01q-host.vercel.app/api/path-b-artifacts",
     "path_b_runbook": "https://twzrd-live-01q-host.vercel.app/api/path-b",
     "pay_decision_policy": "click-only demos; User-Agent sprat-demo/1.0; example wallet only; no page-load spam",
-    "public_repo": "https://github.com/twzrd-sol/twzrd-trust"
+    "public_repo": "https://github.com/twzrd-sol/twzrd-trust",
+    "cascade": "board.cascade",
+    "decision_spine": "board.decision_spine",
+    "intel_role": "memory window of the payment-path loop \u2014 not where the loop begins"
   },
   "provenance": {
     "connected_to_wzrd_final": false,
@@ -168,5 +171,11 @@
     "facilitator": "https://intel.twzrd.xyz",
     "live_board": "https://twzrd-live-01q-host.vercel.app",
     "cloudflare_agents_x402": "https://raw.githubusercontent.com/cloudflare/agents/main/packages/agents/src/mcp/x402.ts"
-  }
+  },
+  "cascade": {
+    "first_domino": "operator/facilitator auto-preflight on real payments",
+    "hidden_domino": "outcome join on signed decision_id",
+    "broken_theory": "profiles \u2192 browse \u2192 buy checks"
+  },
+  "decision_spine_status": "partial \u2014 soft join present; crypto bind + outcome attestation = product PR B"
 }
