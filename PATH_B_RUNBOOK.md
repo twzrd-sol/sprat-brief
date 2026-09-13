@@ -4,7 +4,7 @@
 pair** — an external adoption signal, not TWZRD dogfood and not one arm alone.
 
 **Package:** [`twzrd-x402-gate`](https://www.npmjs.com/package/twzrd-x402-gate) (npm,
-MIT, zero deps). Current: `0.8.14`.
+MIT, zero deps). Current: `0.9.7`.
 
 This is a technical runbook, not a pitch. Every command and field below is copied from
 the package's own README and the monorepo's operator-acceptance doc, not paraphrased.
@@ -52,10 +52,10 @@ an account.
 
 ```bash
 # official @x402/* path
-npm install twzrd-x402-gate@0.8.14 @x402/core @x402/fetch @x402/svm
+npm install twzrd-x402-gate@0.9.7 @x402/core @x402/fetch @x402/svm
 
 # or PayAI x402-solana (stock client, primary Solana seat via beforePayment)
-npm install twzrd-x402-gate@0.8.14 x402-solana@2.1.0
+npm install twzrd-x402-gate@0.9.7 x402-solana@3.0.0
 ```
 
 > **ESM only.** `require()` fails with `ERR_PACKAGE_PATH_NOT_EXPORTED` — set
@@ -145,7 +145,7 @@ demo. Both are useful; only one is designed to correlate.
 ### 2a. Live block proof (real network call, no attribution)
 
 ```bash
-npm install twzrd-x402-gate@0.8.14
+npm install twzrd-x402-gate@0.9.7
 npx twzrd-gate-eval-refuse
 ```
 
@@ -250,7 +250,7 @@ alone is worth logging as partial progress but does not close the milestone.
 
 * Operator / org: …
 * Host runtime: … (not TWZRD-operated)
-* Integration: twzrd-x402-gate@0.8.14 + [x402-solana | @x402/core]
+* Integration: twzrd-x402-gate@0.9.7 + [x402-solana | @x402/core]
 * Date: …
 
 #### Arm 1 — BLOCK
