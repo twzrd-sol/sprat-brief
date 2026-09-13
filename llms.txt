@@ -1,6 +1,6 @@
 # SPRAT by TWZRD — source extract (not the multi-agent host)
 
-> **Canonical host:** https://twzrd-live-01q-host.vercel.app/llms.txt → `/api/board` (**board 1.5.0**)
+> **Canonical host:** https://twzrd-01q-board.vercel.app/llms.txt → `/api/board` (**board 1.5.0**)
 >
 > This repo is **source extract / history only**.
 > Intel = memory window of the payment-path loop — not where the loop begins.

@@ -1,6 +1,6 @@
 # Agent brief: SPRAT (source extract)
 
-**Do not start here.** → https://twzrd-live-01q-host.vercel.app/llms.txt → `/api/board`
+**Do not start here.** → https://twzrd-01q-board.vercel.app/llms.txt → `/api/board`
 
 - Cascade: `board.cascade` (operator first domino)
 - Spine: `board.decision_spine` (partial until product PR B)

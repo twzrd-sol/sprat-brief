@@ -2,7 +2,7 @@
 
 **Do not start here.** Multi-agent host:
 
-https://twzrd-live-01q-host.vercel.app/llms.txt → `/api/board` (board **1.4.0**)
+https://twzrd-01q-board.vercel.app/llms.txt → `/api/board` (board **1.5.0**)
 
 - Path B primary: **`path_b_artifacts_external`** · `/api/path-b-artifacts`
 - CF posture: `board.cf_strategy` (this repo’s JSON)
